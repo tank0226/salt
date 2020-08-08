@@ -8,10 +8,12 @@ import pytest
 
 
 @pytest.fixture(scope="package")
-def salt_master(salt_master_factory):
+def salt_master(salt_factories, salt_master_factory):
     """
     We override the fixture so that we have the daemon running
     """
+    master_running = salt_master_factory.is_running()
+    stats = salt_factories.stats_processes
     if salt_master_factory.is_running():
         salt_master_factory.terminate()
     with salt_master_factory.started("--log-level=debug"):
